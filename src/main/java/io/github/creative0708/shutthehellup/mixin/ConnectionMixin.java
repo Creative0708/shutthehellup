@@ -20,14 +20,14 @@ import java.util.concurrent.RejectedExecutionException;
 @Mixin(Connection.class)
 public abstract class ConnectionMixin {
     @Shadow
-    protected static <T extends PacketListener> void genericsFtw(Packet<T> p_129518_, PacketListener p_129519_) {
+    private static <T extends PacketListener> void genericsFtw(Packet<T> p_129518_, PacketListener p_129519_) {
     }
 
     @Shadow
     @Final
     private static Logger LOGGER;
 
-    @Redirect(method = "Lnet/minecraft/network/Connection;doSendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Lnet/minecraft/network/ConnectionProtocol;Lnet/minecraft/network/ConnectionProtocol;)V", at = @At(value = "INVOKE", target = "Lio/netty/channel/Channel;writeAndFlush(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;"))
+    @Redirect(method = "doSendPacket(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Lnet/minecraft/network/ConnectionProtocol;Lnet/minecraft/network/ConnectionProtocol;)V", at = @At(value = "INVOKE", target = "Lio/netty/channel/Channel;writeAndFlush(Ljava/lang/Object;)Lio/netty/channel/ChannelFuture;"))
     private ChannelFuture wrapWithTryCatch(Channel instance, Object o) {
         try {
             return instance.writeAndFlush(o);
@@ -36,7 +36,7 @@ public abstract class ConnectionMixin {
         }
     }
 
-    @Redirect(method = "Lnet/minecraft/network/Connection;channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;genericsFtw(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;)V"))
+    @Redirect(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;genericsFtw(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;)V"))
     private void wrapWithTryCatch(Packet<?> packet, PacketListener listener) {
         try {
             genericsFtw(packet, listener);
