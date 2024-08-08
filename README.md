@@ -2,7 +2,7 @@
 
 _A Minecraft mod for bodging away packet-related disconnects_
 
-Exactly what it says on the tin. This inserts a try-catch in `net.minecraft.network.Connection` that ignores any
+Exactly what it says on the tin. This adds logic in `net.minecraft.network.Connection` that ignores any
 exceptions thrown due to packet decoding errors. This will prevent players from being disconnected when packet-handling
 code throws an error.
 
@@ -17,6 +17,6 @@ root cause and report it to the respective mod authors. Sweeping errors under th
 is a great way to destabilize your modpack.
 
 That said, if binary searching your modlist takes too long or if you just can't be bothered to do it the right way, this
-mod might be for you.
+mod might just be for you.
 
 Good luck and godspeed.
